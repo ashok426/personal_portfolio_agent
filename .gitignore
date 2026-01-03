@@ -1,0 +1,17 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Ignore Windows alternate data stream exports
+*:Zone.Identifier
+*Zone.Identifier
+.env.env
+.env
+data/

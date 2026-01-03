@@ -1,0 +1,11 @@
+pandas
+openpyxl
+yfinance
+python-dotenv
+fastapi
+uvicorn
+
+# LangChain ecosystem (new modular structure)
+langchain-core
+langchain-openai
+langgraph

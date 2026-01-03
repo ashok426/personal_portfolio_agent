@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personal Portfolio Agent</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="card">
+        <h1>Personal Portfolio Agent</h1>
+        <p class="subtitle">Ask about a stock, portfolio idea, or market theme.</p>
+        <form id="query-form" class="form">
+          <label class="sr-only" for="query-input">Query</label>
+          <input
+            id="query-input"
+            type="text"
+            placeholder="Enter stock name or query..."
+            autocomplete="off"
+            required
+          />
+          <button type="submit">Submit</button>
+        </form>
+        <div id="status" class="status" aria-live="polite"></div>
+        <div class="output" id="output">Your results will appear here.</div>
+        <details class="debug" id="debug-panel">
+          <summary>Debug details</summary>
+          <pre id="debug-output">No debug info yet.</pre>
+        </details>
+      </section>
+    </main>
+    <script src="/static/script.js"></script>
+  </body>
+</html>
