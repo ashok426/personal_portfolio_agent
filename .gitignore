@@ -12,6 +12,5 @@ wheels/
 # Ignore Windows alternate data stream exports
 *:Zone.Identifier
 *Zone.Identifier
-.env.env
 .env
 data/
