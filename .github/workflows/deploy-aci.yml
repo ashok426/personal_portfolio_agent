@@ -54,6 +54,8 @@ jobs:
             --os-type Linux \
             --dns-name-label "${{ secrets.ACI_DNS_LABEL }}" \
             --ports 8000 \
+            --cpu 1 \
+            --memory 1.5 \
             --registry-login-server "${{ secrets.ACR_LOGIN_SERVER }}" \
             --registry-username "${{ steps.acr-creds.outputs.acr_username }}" \
             --registry-password "${{ steps.acr-creds.outputs.acr_password }}" \
