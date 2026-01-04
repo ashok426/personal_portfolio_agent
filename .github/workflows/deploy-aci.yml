@@ -46,6 +46,10 @@ jobs:
       - name: Deploy to ACI
         run: |
           IMAGE="${{ secrets.ACR_LOGIN_SERVER }}/${{ secrets.IMAGE_NAME }}:${IMAGE_TAG}"
+          az container delete \
+            --resource-group "${{ secrets.RESOURCE_GROUP }}" \
+            --name "${{ secrets.ACI_NAME }}" \
+            --yes || true
           az container create \
             --resource-group "${{ secrets.RESOURCE_GROUP }}" \
             --name "${{ secrets.ACI_NAME }}" \
