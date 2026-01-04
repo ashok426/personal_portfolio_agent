@@ -51,6 +51,7 @@ jobs:
             --name "${{ secrets.ACI_NAME }}" \
             --image "$IMAGE" \
             --location "South India" \
+            --os-type Linux \
             --dns-name-label "${{ secrets.ACI_DNS_LABEL }}" \
             --ports 8000 \
             --registry-login-server "${{ secrets.ACR_LOGIN_SERVER }}" \
