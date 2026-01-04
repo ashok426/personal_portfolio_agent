@@ -1,0 +1,59 @@
+name: Build and Deploy to Azure Container Instances
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Log in to ACR
+        run: az acr login --name "${{ secrets.ACR_NAME }}"
+
+      - name: Build and Push Image
+        run: |
+          IMAGE="${{ secrets.ACR_LOGIN_SERVER }}/${{ secrets.IMAGE_NAME }}:${IMAGE_TAG}"
+          docker build -t "$IMAGE" .
+          docker push "$IMAGE"
+
+      - name: Fetch ACR Credentials
+        id: acr-creds
+        run: |
+          ACR_USERNAME=$(az acr credential show --name "${{ secrets.ACR_NAME }}" --query "username" -o tsv)
+          ACR_PASSWORD=$(az acr credential show --name "${{ secrets.ACR_NAME }}" --query "passwords[0].value" -o tsv)
+          echo "acr_username=$ACR_USERNAME" >> "$GITHUB_OUTPUT"
+          echo "acr_password=$ACR_PASSWORD" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy to ACI
+        run: |
+          IMAGE="${{ secrets.ACR_LOGIN_SERVER }}/${{ secrets.IMAGE_NAME }}:${IMAGE_TAG}"
+          az container create \
+            --resource-group "${{ secrets.RESOURCE_GROUP }}" \
+            --name "${{ secrets.ACI_NAME }}" \
+            --image "$IMAGE" \
+            --location "South India" \
+            --dns-name-label "${{ secrets.ACI_DNS_LABEL }}" \
+            --ports 8000 \
+            --registry-login-server "${{ secrets.ACR_LOGIN_SERVER }}" \
+            --registry-username "${{ steps.acr-creds.outputs.acr_username }}" \
+            --registry-password "${{ steps.acr-creds.outputs.acr_password }}" \
+            --environment-variables OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}"
